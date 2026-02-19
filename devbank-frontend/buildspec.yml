@@ -5,18 +5,18 @@ phases:
     commands:
       - aws --version
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 532613442480.dkr.ecr.us-east-1.amazonaws.com
-      - export IMAGE_URI=532613442480.dkr.ecr.us-east-1.amazonaws.com/devbank-frontend:latest
+      - IMAGE_URI=532613442480.dkr.ecr.us-east-1.amazonaws.com/devbank-frontend:latest
 
   build:
     commands:
       - cd devbank-frontend
-      - docker build -t devbank-frontend .
+      - docker build -t devbank-frontend:latest .
       - docker tag devbank-frontend:latest $IMAGE_URI
 
   post_build:
     commands:
       - docker push $IMAGE_URI
-      - printf '[{"name":"frontend","imageUri":"%s"}]' "$IMAGE_URI" > imagedefinitions.json
+      - printf '[{"name":"frontend","imageUri":"%s"}]' $IMAGE_URI > imagedefinitions.json
 
 artifacts:
   files:
